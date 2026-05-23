@@ -805,7 +805,6 @@ function App(){
   const [selDone,setSelDone]=useState(null);
   const [timers,setTimers]=useState([]);
   const [pending,setPending]=useState([]);
-  const [pending,setPending]=useState([]);
   const [,tick]=useState(0);
   const al=useRef(new Set()),tr=useRef([]);
   useEffect(()=>{tr.current=timers;},[timers]);
