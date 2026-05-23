@@ -270,7 +270,7 @@ function OnboardingScreen({onDone}){
     try{
       localStorage.setItem("gr_setup",JSON.stringify(newSetup));
       localStorage.setItem("gr_infrarot",infrarot?"1":"0");
-      localStorage.setItem("gr_onboarded","1");
+      localStorage.setItem("gr_onboarded","2");
     }catch(e){}
     onDone(newSetup,infrarot);
   }
@@ -458,7 +458,7 @@ function BigBtn({label,onClick,color=T.gold,disabled=false}){
 }
 
 /* ── SETUP ──────────────────────────────────────────────────────────── */
-function SetupScreen({setup,setSetup,rostart,setRostart,onNext,hasTimers,onNav,activeCount=0}){
+function SetupScreen({setup,setSetup,onNext,hasTimers,onNav,activeCount=0}){
   return(
     <div style={{height:"100%",display:"flex",flexDirection:"column"}}>
       <StepBar current={0} hasTimers={hasTimers} onNav={onNav} activeCount={activeCount}/>
@@ -965,7 +965,7 @@ function App(){
   const [phase,setPhase]=useState("food");
   const [setup,setSetup]=useState(loadSetup);
   const [rostart] = useState("gusseisen"); // legacy, kept for rstType fallback
-  const [onboarded,setOnboarded]=useState(()=>{try{return localStorage.getItem("gr_onboarded")==="1";}catch(e){return false;}});
+  const [onboarded,setOnboarded]=useState(()=>{try{return localStorage.getItem("gr_onboarded")==="2";}catch(e){return false;}});
   const [hasInfrarot,setHasInfrarot]=useState(()=>{try{const v=localStorage.getItem("gr_infrarot");return v===null?true:v==="1";}catch(e){return true;}});
   const [selFood,setSelFood]=useState(null);
   const [selDone,setSelDone]=useState(null);
@@ -1076,7 +1076,7 @@ function App(){
               }
             };
             return(<>
-              {phase==="setup"    &&<SetupScreen    setup={setup} setSetup={setSetup} rostart={rostart} setRostart={setRostart} onNext={()=>setPhase("food")} hasTimers={hasT} onNav={nav} activeCount={actC}/>}
+              {phase==="setup"    &&<SetupScreen    setup={setup} setSetup={setSetup} onNext={()=>setPhase("food")} hasTimers={hasT} onNav={nav} activeCount={actC}/>}
               {phase==="food"     &&<FoodScreen     setup={setup} onSelect={f=>{setSelFood(f);setPhase(f.garstufen?"doneness":"zone");}} onBack={()=>setPhase(pending.length>0?"preheat":"setup")} hasTimers={hasT} onNav={nav} activeCount={actC} pendingCount={pending.length}/>}
               {phase==="doneness" &&selFood&&<DonenessScreen food={selFood} onSelect={g=>{setSelDone(g);setPhase("zone");}} onBack={()=>setPhase("food")} hasTimers={hasT} onNav={nav} activeCount={actC}/>}
               {phase==="zone"     &&selFood&&<ZoneScreen food={selFood} garstufe={selDone} setup={setup} onConfirm={z=>addToPending(selFood,selDone,z)} onBack={()=>setPhase(selFood.garstufen?"doneness":"food")} hasTimers={hasT} onNav={nav} activeCount={actC}/>}
